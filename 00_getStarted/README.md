@@ -62,7 +62,11 @@ for later reference (see virtual box documentation).
 
 To run GeoNode in development mode you have to install **some** of its prerequisites (as stated 
 [here](https://docs.geonode.org/en/3.x/install/advanced/core/index.html#ubuntu-20-04lts)). Since PyCharm will take care
-of the virtual environment our setup is _a bit more lean_ than the officially stated. See:
+of the virtual environment our setup is _a bit more lean_ than the officially stated. 
+
+_Please use the shell commands one at a time to be sure they will be executed_
+
+See:
 
 ````shell script
 sudo add-apt-repository ppa:ubuntugis/ppa
@@ -110,7 +114,9 @@ After installing PyCharm you can start it. To start a new project we will clone 
 
 ![get from vcs](img/pycharm_001.png)
 
-and use the https link for cloning the repository. You can later connect your github account with PyCharm and fork the
+and use the https link for cloning the repository: ``https://github.com/GeoNode/geonode.git``
+
+You can later connect your github account with PyCharm and fork the
 GeoNode main repository.
 
 ![clone by https](img/pycharm_002.png)
@@ -143,7 +149,7 @@ pip install pygdal=="`gdal-config --version`.*"
 
 ## Prepare the debug environment
 After having the appropriate packages installed, we can start to use the GeoNode `paver` commands to help us setup the
-dev environment:
+dev environment. You can use the already opened PyCharm terminal to invoke paver by:
 ````shell script
 # download geoserver and jetty and other needed stuff
 paver setup
@@ -200,13 +206,22 @@ Use the following python code to check if the database is running as expected:
 ````python
 from django.contrib.auth import get_user_model
 User = get_user_model()
-users = User.objects.all()
+User.objects.all()
 ```` 
  
- You should get output like this:
+You should get output like this:
   
 ![create debug configuration](img/pycharm_012.png)
 
+We see two User objects are present in the django database. The interactive shell will enable code completion and other 
+common IDE features.
+
+## Breaking into the code
+
+Let´s say we want to see how the code behaves on uploading a shapefile with iso-metadata xml. 
+
+**TODO** take a look at /geonode/layers/metadata.py and find function. Use find usage. See it is used inside
+the upload.py. Do set breakpoint and upload file with metadata.
 
 **TODO** debug some workflow like uploading a file
 
