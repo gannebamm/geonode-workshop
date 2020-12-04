@@ -210,23 +210,120 @@ User.objects.all()
 ```` 
  
 You should get output like this:
-  
+
 ![create debug configuration](img/pycharm_012.png)
 
 We see two User objects are present in the django database. The interactive shell will enable code completion and other 
 common IDE features.
 
+resume the application and lets test the web application.
+
+## Test GeoNodes funtionality
+
+You can open GeoNode with your browser at `localhost:8000`. By doing this you will see the default GeoNode homepage:
+
+![GeoNode homepage](img/geonode_home.png)
+
+You can login with the credentials:
+
+user: `admin`, password: `admin`
+
+To check if GeoServer is running and is properly connected with GeoNode we can open it in the superuser menu:
+
+![GeoNode sudo menu](img/sudo_menu.png)
+
+if you choose GeoServer the browser will open your local GeoServer which is running in a jetty container. To test the 
+GeoNode to GeoServer coupling (via OAuth) you can use the little GeoNode icon next to the standart login buttons:
+
+![GeoNode icon](img/oauth_icon.png)
+
+By clicking it you should get authenticated as GeoServer superuser.
+
+We could test more of GeoNodes functionality, like creating a new user and uploading files, but we want to get debugging
+working! A tool you will often use is to set breakpoints. Let me show you how that works.
+
 ## Breaking into the code
 
-Let´s say we want to see how the code behaves on uploading a shapefile with iso-metadata xml. 
+Let´s say we want to see how the code behaves on uploading a shapefile with iso-metadata xml. We will start by opening 
+the file `geonode/layers/metadata.py`:
 
-**TODO** take a look at /geonode/layers/metadata.py and find function. Use find usage. See it is used inside
-the upload.py. Do set breakpoint and upload file with metadata.
+![the metadata.py file](img/metadata_file.png)
 
-**TODO** debug some workflow like uploading a file
+This looks promising. To see where the `set_metadata(xml)` function is called we can find its usages. Do so by right 
+clicking on the function and choosing 'find usages' (_ALT+SHIFT+7_) in the menu.
 
+![find usages](img/find_usages.png)
+
+As you can see it is actually used in the `upload.py` file. Let us break into the execution of `set_metadata()` at line 51. You can do so by
+clicking right next to the line number:
+
+![breakpoint setting](img/breakpoint.png)
+
+Now we need something to upload with XML metadata. We will use a test dataset inside this repository and clone it to our
+dev VM. Open the terminal (eg. in PyCharm):
+
+```shell
+# switch to home directory
+cd ~
+# clone this repo
+git clone https://github.com/gannebamm/geonode-workshop
+# check the data content
+ll geonode-workshop/00_getStarted/data
+```
+example output:
+```shell
+geonode@geonode-VirtualBox:~$ ll geonode-workshop/00_getStarted/data
+total 2012
+drwxrwxr-x 2 geonode geonode    4096 Dez  4 17:28 ./
+drwxrwxr-x 4 geonode geonode    4096 Dez  4 17:28 ../
+-rw-rw-r-- 1 geonode geonode       5 Dez  4 17:28 winterCrangonSurvey.cpg
+-rw-rw-r-- 1 geonode geonode 1933688 Dez  4 17:28 winterCrangonSurvey.dbf
+-rw-rw-r-- 1 geonode geonode     143 Dez  4 17:28 winterCrangonSurvey.prj
+-rw-rw-r-- 1 geonode geonode     257 Dez  4 17:28 winterCrangonSurvey.qpj
+-rw-rw-r-- 1 geonode geonode   51116 Dez  4 17:28 winterCrangonSurvey.shp
+-rw-rw-r-- 1 geonode geonode   14676 Dez  4 17:28 winterCrangonSurvey.shx
+-rw-rw-r-- 1 geonode geonode   29584 Dez  4 17:28 winterCrangonSurvey.xml
+```
+
+lets use this files to test our breakpoint. Switch to your browser and open the GeoNode site. Check if you are loged in 
+as admin and upload the files above:
+
+![upload layer](img/upload_layer.png)
+
+you will find them here:
+
+![files to upload](img/pick_files.png)
+
+After clicking the red upload button PyCharm will break in and show you the current execution trace and variables:
+
+![breaking in](img/breaking_in.png)
+
+We can use step-over (`F8`) to step over the next steps. Do so twice to stop right before the tagname will be evaluated:
+
+![steppin over](img/stepping_over.png)
+
+We see the evaluation will execute a function `iso2dict()` on line 59. We want to follow this execution and therefore 
+switch to `stepping into` (`F7`) which will let us debug into the function execution. See:
+
+![steppin in](img/stepping_into.png)
+
+Ok. We have learned how to get a debuggable development VM running on a Windows host. We also learned some of the 
+IDE features PyCharm CE does provide. There is much more to learn and I encourage you to read or watch some tutorial
+material. But that is outside this workshops scope.
+
+**Little Sidenote: The above debuged request did time-out! Keep that in mind if you debug GeoNode to GeoServer 
+communication**
+
+So, what is left for us to do is finish this workshop.
 
 ## Stop GeoNode and GeoServer
 
-You can stop the debug server with PyCharms integrated tools **ToDo make screenshot**. You should stop GeoServer, too. 
-to accomplish this use ``paver stop_geoserver`` in the PyCharm terminal. This will stop jetty and GeoServer.
+You can stop the debug server with PyCharms integrated tools. 
+
+![stop django](img/stop_django.png)
+
+But in addition you should stop GeoServer, too! I oftentimes left that one running an was puzzled why the 8080 port was
+blocked. to accomplish this use ``paver stop_geoserver`` in the PyCharm terminal (make sure you have the virtual env 
+running). This will stop jetty and GeoServer.
+
+And now, we are finished.
