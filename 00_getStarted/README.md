@@ -254,7 +254,7 @@ clicking on the function and choosing 'find usages' (_ALT+SHIFT+7_) in the menu.
 
 ![find usages](img/find_usages.png)
 
-As you can see it is actually used in the `upload.py` file. Let us break into the execution of `set_metadata()` at line 51. You can do so by
+As you can see it is actually used in the `utils.py` file inside the `file_upload()` function on line 651. Let us break into the execution of `set_metadata()` at line 51 of the currently open `metadata.py`. You can do so by
 clicking right next to the line number:
 
 ![breakpoint setting](img/breakpoint.png)
