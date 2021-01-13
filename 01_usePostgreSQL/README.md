@@ -9,6 +9,7 @@ The below section is from the [official documentation](https://docs.geonode.org/
 
 We will add the repository to our ppa list, get the corresponding certificate and install the needed packages. You
 can use whichever shell you like, but I would just use the PyCharm integrated one
+
 ```shell
 # Ubuntu 20.04 (focal)
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
@@ -166,13 +167,16 @@ paver start_geoserver
 With a completly migrated database and GeoServer running we can focus on getting our django debug configuration to run 
 with our `.env` files. You can use them inside the run configuration menu of PyCharm like this:
 
-switch to the EnvFile section
+switch to the EnvFile section:
+
 ![run config menu](img/Debug_Config_EnvFiles.png)
 
 enable EnvFile parsing and add files:
+
 ![run config menu](img/DebugConfig_addEnvFiles.png)
 
 Add the envFiles provided by this repo:
+
 ![run config menu](img/DebugConfig_addedEnvFilesDone.png)
 
 This will enable the debug run configuration to read the environmental variables and use them on startup. Time to test
