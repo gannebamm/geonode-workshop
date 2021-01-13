@@ -30,7 +30,7 @@ sudo -u postgres createuser -P geonode
 Create database `geonode` and `geonode_data` with owner geonode
 ```shell
 sudo -u postgres createdb -O geonode geonode
-sudo -u postgres createdb -O geonode geonode_data
+sudo -u postgres createdb -O geonode_data geonode_data
 ```
 
 Next let’s create PostGIS extensions
@@ -43,7 +43,7 @@ sudo -u postgres psql -d geonode -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEM
 sudo -u postgres psql -d geonode_data -c 'CREATE EXTENSION postgis;'
 sudo -u postgres psql -d geonode_data -c 'GRANT ALL ON geometry_columns TO PUBLIC;'
 sudo -u postgres psql -d geonode_data -c 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
-sudo -u postgres psql -d geonode_data -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO geonode;'
+sudo -u postgres psql -d geonode_data -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO geonode_data;'
 ```
 
 let us change the connection settings
@@ -98,7 +98,7 @@ psql -U geonode geonode
 # Repeat the test with geonode_data DB
 # use \q to quit
 psql -U postgres geonode_data
-psql -U geonode geonode_data
+psql -U geonode_data geonode_data
 ```
 
 ## reset dev environment and sync it again
@@ -128,7 +128,7 @@ GEONODE_GEODATABASE_PASSWORD=geonode_data
 GEONODE_DATABASE_SCHEMA=public
 GEONODE_GEODATABASE_SCHEMA=public
 DATABASE_URL=postgis://geonode:geonode@localhost:5432/geonode
-GEODATABASE_URL=postgis://geonode:geonode@localhost:5432/geonode_data
+GEODATABASE_URL=postgis://geonode_data:geonode_data@localhost:5432/geonode_data
 GEONODE_DB_CONN_MAX_AGE=0
 GEONODE_DB_CONN_TOUT=5
 DEFAULT_BACKEND_DATASTORE=datastore
